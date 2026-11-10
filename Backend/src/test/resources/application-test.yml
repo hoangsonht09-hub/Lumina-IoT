@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:lumina-test;DB_CLOSE_DELAY=-1
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  flyway:
+    enabled: false
+app:
+  auth:
+    jwt-secret: lumina-test-secret-with-more-than-32-characters
+    token-ttl-seconds: 3600
+    email: test@example.com
+    password: test-only-password
+  mqtt:
+    enabled: false

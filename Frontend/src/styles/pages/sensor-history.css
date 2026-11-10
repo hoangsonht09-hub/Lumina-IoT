@@ -1,0 +1,43 @@
+.sensor-search-bar {
+  grid-template-columns: minmax(150px, 220px) minmax(280px, 520px) auto;
+  justify-content: start;
+}
+
+.sensor-search-bar + .table-head,
+.sensor-table .table-row {
+  grid-template-columns: .65fr 1.6fr .68fr .55fr 1.35fr .85fr;
+}
+
+.sensor-search-button {
+  display: inline-flex;
+  height: 39px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  border-radius: 9px;
+  color: var(--ink);
+  background: var(--lime);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sensor-search-button:hover {
+  background: var(--lime-bright);
+}
+
+@media (max-width: 900px) {
+  .sensor-search-bar {
+    grid-template-columns: .65fr 1.35fr auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .sensor-search-bar {
+    grid-template-columns: 1fr;
+  }
+
+  .sensor-search-button {
+    width: 100%;
+  }
+}

@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+
+:root {
+  font-family: 'DM Sans', Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #17201a;
+  background: #f2f4f2;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #17201a;
+  --ink-soft: #657069;
+  --surface: #ffffff;
+  --surface-soft: #f6f8f6;
+  --border: #e6eae6;
+  --lime: #b9ef38;
+  --lime-bright: #d4ff62;
+  --lime-soft: #f1fad8;
+  --green: #287b56;
+  --green-soft: #e7f5ec;
+  --dark: #1e2521;
+  --shadow: 0 12px 40px rgba(30, 45, 35, 0.055);
+  --font-size-caption: 10px;
+  --font-size-small: 12px;
+  --font-size-body: 14px;
+  --font-size-section: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html { min-width: 320px; background: #f2f4f2; }
+
+body { margin: 0; min-width: 320px; min-height: 100vh; font-size: var(--font-size-body); line-height: 1.5; }
+
+button, input, select { font: inherit; }
+
+button, a { -webkit-tap-highlight-color: transparent; }
+
+button { border: 0; cursor: pointer; }
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(185, 239, 56, .5); outline-offset: 2px; }
+
+a { color: inherit; text-decoration: none; }
+
+h1, h2, h3, p { margin: 0; }
+
+h1, h2, h3, .brand strong { font-family: 'Manrope', 'DM Sans', sans-serif; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+

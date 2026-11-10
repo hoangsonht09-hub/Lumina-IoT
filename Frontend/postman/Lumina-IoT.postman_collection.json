@@ -1,0 +1,448 @@
+{
+  "info": {
+    "_postman_id": "9428a030-ad8c-4a62-b0ea-192cac25b57d",
+    "name": "Lumina IoT Backend",
+    "description": "Collection kiểm thử REST API cho hệ thống ESP32 Light Sensor. Chạy request Login trước để tự động lưu JWT vào environment.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Không có lỗi máy chủ', function () {",
+          "    pm.expect(pm.response.code).to.be.below(500);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - System",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["actuator", "health"]
+            },
+            "description": "Kiểm tra backend Spring Boot đang hoạt động."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Authentication",
+      "item": [
+        {
+          "name": "Login - Tự lưu JWT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Đăng nhập thành công', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.data.accessToken).to.be.a('string').and.not.empty;",
+                  "    pm.environment.set('accessToken', response.data.accessToken);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            },
+            "description": "Đọc email/password từ environment và tự lưu data.accessToken."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Dashboard & Sensors",
+      "item": [
+        {
+          "name": "Dashboard Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/dashboard/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "dashboard", "summary"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sensors Realtime",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sensors/realtime",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sensors", "realtime"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sensors History - All",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sensors/history?page=1&limit=10&direction=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sensors", "history"],
+              "query": [
+                { "key": "field", "value": "{{sensorField}}", "disabled": true },
+                { "key": "value", "value": "{{sensorValue}}", "disabled": true },
+                { "key": "search", "value": "TEMP", "disabled": true },
+                { "key": "type", "value": "temperature", "disabled": true },
+                { "key": "status", "value": "normal", "disabled": true },
+                { "key": "minValue", "value": "18", "disabled": true },
+                { "key": "maxValue", "value": "32", "disabled": true },
+                { "key": "timeQuery", "value": "{{historyTime}}", "disabled": true },
+                { "key": "from", "value": "2026-10-01T00:00:00+07:00", "disabled": true },
+                { "key": "to", "value": "2026-10-31T23:59:59+07:00", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "direction", "value": "desc" }
+              ]
+            },
+            "description": "Lấy một trang lịch sử cảm biến. page và limit điều khiển phân trang phía backend; có thể bật query parameter đang disabled để kết hợp bộ lọc."
+          },
+          "response": []
+        },
+        {
+          "name": "Sensors History - Filter Field & Value",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sensors/history?field={{sensorField}}&value={{sensorValue}}&page={{page}}&limit={{limit}}&direction={{direction}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sensors", "history"],
+              "query": [
+                { "key": "field", "value": "{{sensorField}}", "description": "all | temperature | humidity | light | time" },
+                { "key": "value", "value": "{{sensorValue}}" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "direction", "value": "{{direction}}" }
+              ]
+            },
+            "description": "Khớp ô chọn trường + ô nhập giá trị ở trang Lịch sử cảm biến. Đổi sensorField và sensorValue trong environment hoặc trực tiếp ở tab Params."
+          },
+          "response": []
+        },
+        {
+          "name": "Sensors History - Search Time Text",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/sensors/history?field=time&value={{historyTime}}&page={{page}}&limit={{limit}}&direction={{direction}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sensors", "history"],
+              "query": [
+                { "key": "field", "value": "time" },
+                { "key": "value", "value": "{{historyTime}}" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "direction", "value": "{{direction}}" }
+              ]
+            },
+            "description": "Tìm thời gian theo thứ tự YYYY-MM-DD HH:mm:ss; có thể bỏ dần phần cuối để tìm đến tháng (YYYY-MM) hoặc năm (YYYY)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Devices",
+      "item": [
+        {
+          "name": "List Devices",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/devices",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Turn Device ON",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isOn\": true,\n  \"brightness\": 100\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{deviceId}}/control",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{deviceId}}", "control"]
+            },
+            "description": "Mặc định deviceId=LED_01. Backend publish lệnh tương ứng lên MQTT."
+          },
+          "response": []
+        },
+        {
+          "name": "Turn Device OFF",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isOn\": false,\n  \"brightness\": 0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/{{deviceId}}/control",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "{{deviceId}}", "control"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Turn All Devices ON",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isOn\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/control-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "control-all"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Turn All Devices OFF",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isOn\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/control-all",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "control-all"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Actions & Profile",
+      "item": [
+        {
+          "name": "Action History - All",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/actions?page=1&limit=10&direction=desc",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actions"],
+              "query": [
+                { "key": "deviceId", "value": "{{deviceId}}", "disabled": true },
+                { "key": "device", "value": "{{deviceFilter}}", "disabled": true },
+                { "key": "search", "value": "admin", "disabled": true },
+                { "key": "action", "value": "{{actionFilter}}", "disabled": true },
+                { "key": "status", "value": "{{statusFilter}}", "disabled": true },
+                { "key": "timeQuery", "value": "{{historyTime}}", "disabled": true },
+                { "key": "from", "value": "2026-10-01T00:00:00+07:00", "disabled": true },
+                { "key": "to", "value": "2026-10-31T23:59:59+07:00", "disabled": true },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "direction", "value": "desc" }
+              ]
+            },
+            "description": "Lấy một trang lịch sử bật/tắt. page và limit điều khiển phân trang phía backend; có thể bật query parameter đang disabled để kết hợp bộ lọc."
+          },
+          "response": []
+        },
+        {
+          "name": "Action History - Filters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/actions?device={{deviceFilter}}&action={{actionFilter}}&status={{statusFilter}}&page={{page}}&limit={{limit}}&direction={{direction}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actions"],
+              "query": [
+                { "key": "device", "value": "{{deviceFilter}}", "description": "Tên hoặc ID thiết bị" },
+                { "key": "action", "value": "{{actionFilter}}", "description": "turn_on | turn_off | change_brightness | bật | tắt | mất kết nối" },
+                { "key": "status", "value": "{{statusFilter}}", "description": "pending | success | failed" },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "direction", "value": "{{direction}}" }
+              ]
+            },
+            "description": "Khớp các bộ lọc thiết bị, hành động và trạng thái ở trang Lịch sử bật/tắt."
+          },
+          "response": []
+        },
+        {
+          "name": "Action History - Search Time Text",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/actions?timeQuery={{historyTime}}&page={{page}}&limit={{limit}}&direction={{direction}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "actions"],
+              "query": [
+                { "key": "timeQuery", "value": "{{historyTime}}" },
+                { "key": "device", "value": "{{deviceFilter}}", "disabled": true },
+                { "key": "action", "value": "{{actionFilter}}", "disabled": true },
+                { "key": "status", "value": "{{statusFilter}}", "disabled": true },
+                { "key": "page", "value": "{{page}}" },
+                { "key": "limit", "value": "{{limit}}" },
+                { "key": "direction", "value": "{{direction}}" }
+              ]
+            },
+            "description": "Tìm thời gian theo thứ tự YYYY-MM-DD HH:mm:ss; có thể bỏ dần phần cuối để tìm đến tháng (YYYY-MM) hoặc năm (YYYY). Có thể bật thêm các filter thiết bị, hành động và trạng thái."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile (Optional)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"B23DCCN833\",\n  \"fullName\": \"{{profileName}}\",\n  \"email\": \"{{profileEmail}}\",\n  \"organization\": \"PTIT\",\n  \"links\": {\n    \"github\": \"https://github.com/Toanproptit/IOT_Light_Sensor.git\",\n    \"figma\": \"https://www.figma.com/design/FAFolqqY1l4d1ouGOGe4EN/Untitled\",\n    \"projectDocs\": \"#project-docs\",\n    \"apiDocs\": \"/docs/API_DOCUMENTATION.md\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
+            },
+            "description": "Request này thay đổi dữ liệu hồ sơ. Chỉ Send khi muốn cập nhật."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "06 - Reports",
+      "item": [
+        {
+          "name": "Download Sensor Report CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports?type=sensors&format=csv",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports"],
+              "query": [
+                { "key": "type", "value": "sensors" },
+                { "key": "format", "value": "csv" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Download Action Report CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/reports?type=actions&format=csv",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "reports"],
+              "query": [
+                { "key": "type", "value": "actions" },
+                { "key": "format", "value": "csv" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

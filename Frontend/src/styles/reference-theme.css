@@ -1,0 +1,169 @@
+/* Shared palette and proportions from the supplied Lumina / SONNH screens. */
+:root {
+  --ink: #153f79;
+  --ink-soft: #7694bf;
+  --border: #d6e5ff;
+  --surface-soft: #eaf2ff;
+  --lime: #2976f3;
+  --lime-bright: #1d65df;
+  --lime-soft: #e3efff;
+  --dark: #244f91;
+  --green: #10b58d;
+  --shadow: 0 16px 40px rgba(37, 77, 135, .045);
+  --font-size-caption: 12px;
+  --font-size-body: 16px;
+  --font-size-section: 21px;
+  color: var(--ink);
+  background: #eaf3ff;
+}
+html { background: #eaf3ff; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline-color: #81b0ff; }
+.app-shell { max-width: none; }
+.main-shell { width: calc(100% - 328px); background: #e9f2ff; }
+.sidebar { width: 328px; flex-basis: 328px; padding: 35px 22px 30px; background: linear-gradient(155deg, #244f90, #193e75); border: 0; color: white; }
+.brand { padding: 0 14px 44px; gap: 16px; }
+.brand-mark { width: 54px; height: 54px; background: white; color: #24549a; box-shadow: none; border-radius: 16px; }
+.brand-mark svg { width: 27px; height: 27px; }
+.brand strong { font-size: 28px; }
+.brand span, .nav-caption { color: #b9cfee; font-size: 14px; }
+.nav-caption { padding: 0 16px 13px; }
+.nav-item { padding: 16px 18px; gap: 17px; font-size: 18px; font-weight: 600; color: #c9daf5; border-radius: 14px; }
+.nav-item svg { width: 23px; height: 23px; flex-shrink: 0; }
+.nav-item.active { color: white; background: #2976f3; box-shadow: none; }
+.nav-item.active::after { right: 16px; background: white; }
+.nav-item:hover { color: white; background: #ffffff12; }
+.nav-item.active:hover { background: #2976f3; }
+.sidebar-footer { border-color: #ffffff30; padding-top: 22px; gap: 6px; }
+.topbar { height: 96px; padding: 0 3vw; }
+.topbar-title { font-size: 18px; }
+.top-actions { gap: 16px; }
+.user-menu { color: var(--ink); }
+.page { width: calc(100% - 84px); max-width: none; padding-top: 48px; }
+.page-intro { margin-bottom: 40px; }
+.eyebrow { font-size: 14px; }
+.page-intro h1 { font-size: clamp(32px, 3vw, 48px); }
+.page-intro p { max-width: none; font-size: 18px; margin-top: 12px; }
+.card { border-radius: 22px; }
+.overview-page { height: auto; min-height: calc(100vh - 96px); overflow: visible; padding-top: 32px; }
+.metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; margin-bottom: 22px; }
+.metric-card { min-height: 190px; padding: 26px; border-radius: 21px; }
+.metric-card::before { width: 146px; height: 146px; background: #e9f1ff; pointer-events: none; }
+.metric-head { font-size: 16px; color: var(--ink-soft); }
+.metric-icon { width: 42px; height: 42px; color: #2976f3; }
+.metric-icon svg { width: 23px; height: 23px; }
+.metric-value { font-size: 40px; }
+.metric-card.green .metric-value, .metric-card.yellow .metric-value { font-size: 34px; }
+.metric-value small { font-size: 14px; color: var(--ink-soft); }
+.dashboard-grid { grid-template-columns: minmax(0, 2.07fr) minmax(350px, 1fr); gap: 22px; }
+.chart-card, .quick-devices { padding: 30px; min-height: 474px; }
+.section-head p { font-size: 15px; color: var(--ink-soft); }
+.segmented { background: #eaf2ff; border-radius: 13px; }
+.segmented button { font-size: 14px; padding: 10px 12px; color: var(--ink-soft); }
+.chart-wrap { height: 310px; margin-top: 35px; padding-left: 50px; }
+.chart-wrap svg { height: 270px; }
+.chart-y-labels { top: 40px; bottom: 45px; color: var(--ink-soft); }
+.chart-labels { color: var(--ink-soft); }
+.grid-line { stroke: #d2e3ff; }
+.quick-device-action { padding: 9px 10px; font-size: 12px; }
+.quick-device-action.on { color: #1461d3; }
+.quick-device { padding: 18px 8px; gap: 15px; border-color: #e6eefb; }
+.device-icon { width: 45px; height: 45px; background: #edf3fb; color: #8da7c9; }
+.device-icon.active { color: #2976f3; }
+.quick-device strong { font-size: 16px; }
+.quick-device div span { font-size: 14px; color: var(--ink-soft); }
+.toggle { width: 49px; height: 28px; background: #d5e0f1; }
+.toggle span { width: 20px; height: 20px; top: 4px; left: 4px; }
+.toggle.on span { left: 25px; background: white; }
+.filters { padding: 21px; gap: 14px; }
+.search-field, .select-field, .date-field, .sensor-search-button, .activity-search-button { height: 51px; border-radius: 12px; }
+.search-field input, .select-field select, .date-field input { font-size: 15px; }
+.sensor-search-bar { grid-template-columns: minmax(180px, 290px) minmax(280px, 686px) auto; }
+.sensor-search-button, .activity-search-button, .primary-button, .pagination button.active { color: white; box-shadow: none; }
+.time-input-hint { font-size: 12px; }
+.table-head { min-height: 56px; font-size: 14px; }
+.table-row { min-height: 77px; font-size: 15px; }
+.table-head, .table-row { padding-left: 27px; padding-right: 27px; }
+.table-row > strong { font-size: 17px; }
+.sensor-dot { width: 38px; height: 38px; border-radius: 12px; }
+.sensor-name { gap: 12px; }
+.sensor-name svg { width: 20px; height: 20px; }
+.table-row small, .mono { font-size: 12px; }
+.copyable-datetime { font-size: 14px; color: var(--ink); }
+.copy-time-button { width: 33px; height: 33px; }
+.status-badge, .action-chip { font-size: 12px; padding: 7px 9px; }
+.action-chip { color: #2064d7; }
+.table-footer { min-height: 72px; font-size: 14px; padding: 0 26px; }
+.pagination button { width: 37px; height: 37px; font-size: 14px; }
+.rows-per-page select { height: 39px; font-size: 14px; }
+.details-card, .project-links { padding: 28px; }
+.profile-stack { gap: 22px; }
+.profile-page .section-head h2 { font-size: 24px; }
+.profile-page .section-head p { font-size: 16px; }
+.profile-details-layout { grid-template-columns: 205px minmax(0, 1fr); margin-top: 25px; }
+.profile-avatar-picker { width: 128px; height: 128px; }
+.avatar-upload > strong { font-size: 18px; }
+.avatar-upload > small { font-size: 12px; max-width: 190px; }
+.info-field { padding: 16px; min-height: 92px; background: #fbfcfb; }
+.info-field > span { font-size: 15px; }
+.info-field > strong { font-size: 18px; }
+.project-link { min-height: 83px; padding: 12px; gap: 12px; border-radius: 15px; }
+.project-link strong { font-size: 18px; }
+.project-link small { font-size: 14px; }
+.link-icon { width: 51px; height: 51px; }
+.secondary-button { min-height: 52px; font-size: 16px; }
+.login-page { background: radial-gradient(ellipse at 20% 9%, #e5f3ca 0, transparent 40%), #f2f4f2; }
+.login-card { width: min(580px, 100%); padding: 50px; border-radius: 32px; }
+.login-brand { gap: 14px; font-size: 18px; }
+.login-brand svg { width: 45px; height: 45px; padding: 8px; background: #2976f3; color: #143e78; border-radius: 14px; }
+.login-heading { margin: 46px 0 36px; }
+.login-heading span { font-size: 15px; }
+.login-heading h1 { font-size: 40px; margin: 13px 0 12px; }
+.login-heading p { font-size: 18px; line-height: 1.5; }
+.login-card form { gap: 24px; }
+.login-card label { grid-template-columns: 48px 1fr; }
+.login-card label > span { font-size: 16px; margin-bottom: 10px; }
+.login-card label i { border-radius: 14px 0 0 14px; }
+.login-card label i svg { width: 22px; height: 22px; }
+.login-card input { height: 62px; padding: 16px; background: #e8f0ff; border-radius: 0 14px 14px 0; font-size: 18px; }
+.login-card button { min-height: 62px; font-size: 18px; border-radius: 15px; }
+.demo-credentials { text-align: center; margin-top: 20px; font-size: 17px; line-height: 1.6; }
+@media (min-width: 901px) and (max-width: 1450px) {
+  .sidebar { width: 260px; flex-basis: 260px; }
+  .main-shell { width: calc(100% - 260px); }
+  .nav-item { font-size: 15px; }
+  .page { width: calc(100% - 48px); }
+  .dashboard-grid { grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr); }
+  .chart-card, .quick-devices { padding: 22px; }
+  .section-head { flex-wrap: wrap; }
+  .copyable-datetime { font-size: 11px; }
+}
+@media (max-width: 900px) {
+  .main-shell { width: 100%; }
+  .sidebar { width: 290px; }
+  .page { width: calc(100% - 36px); padding-top: 28px; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .metrics-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .metric-card { padding: 18px; min-height: 155px; }
+  .link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sensor-search-bar { grid-template-columns: 1fr 2fr auto; }
+}
+@media (max-width: 640px) {
+  .topbar { height: 76px; padding: 0 16px; }
+  .topbar-title { font-size: 14px; }
+  .top-actions { gap: 4px; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .metric-card { min-height: 140px; }
+  .chart-card, .quick-devices { padding: 20px; min-height: 360px; }
+  .section-head { flex-wrap: wrap; }
+  .chart-wrap { padding-left: 30px; height: 260px; }
+  .chart-wrap svg { height: 220px; }
+  .sensor-search-bar, .history-filters { grid-template-columns: 1fr; }
+  .page-intro h1 { font-size: 32px; }
+  .page-intro p { font-size: 16px; }
+  .profile-details-layout, .detail-grid, .link-grid { grid-template-columns: 1fr; }
+  .login-card { padding: 30px 24px; border-radius: 24px; }
+  .login-heading { margin: 30px 0; }
+  .login-heading h1 { font-size: 34px; }
+  .login-heading p { font-size: 16px; }
+  .demo-credentials { font-size: 15px; }
+}

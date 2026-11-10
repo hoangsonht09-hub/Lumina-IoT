@@ -1,0 +1,58 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: lumina-iot-backend
+  datasource:
+    url: ${DB_URL:jdbc:h2:file:./data/lumina;AUTO_SERVER=TRUE}
+    username: ${DB_USERNAME:sa}
+    password: ${DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: Asia/Bangkok
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jackson:
+    time-zone: Asia/Bangkok
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+  auth:
+    jwt-secret: ${JWT_SECRET}
+    token-ttl-seconds: ${JWT_TTL_SECONDS:3600}
+    email: ${APP_EMAIL:b23dccn833@stu.ptit.edu.vn}
+    password: ${APP_PASSWORD}
+  mqtt:
+    enabled: ${MQTT_ENABLED:true}
+    broker-uri: ${MQTT_BROKER_URI:tcp://127.0.0.1:1884}
+    username: ${MQTT_USERNAME:}
+    password: ${MQTT_PASSWORD:}
+    client-id: ${MQTT_CLIENT_ID:lumina-backend}
+    sensor-topic: ${MQTT_SENSOR_TOPIC:home/esp32/sensors}
+    status-topic: ${MQTT_STATUS_TOPIC:home/esp32/status}
+    command-topic: ${MQTT_COMMAND_TOPIC:home/esp32/command}
+    reconnect-delay-ms: ${MQTT_RECONNECT_DELAY_MS:5000}
+    offline-after-seconds: ${MQTT_OFFLINE_AFTER_SECONDS:10}
+    command-timeout-seconds: ${MQTT_COMMAND_TIMEOUT_SECONDS:5}
+
+logging:
+  level:
+    org.eclipse.paho.client.mqttv3: WARN

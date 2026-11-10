@@ -1,0 +1,20 @@
+@import './globals.css';
+
+/* Application layout */
+@import './layout/shell.css';
+@import './layout/sidebar.css';
+@import './layout/topbar.css';
+
+/* Reusable UI */
+@import './components/page.css';
+@import './components/filters.css';
+@import './components/table.css';
+@import './components/feedback.css';
+
+/* Page-specific styles */
+@import './pages/dashboard.css';
+@import './pages/sensor-history.css';
+@import './pages/activity-history.css';
+@import './pages/profile.css';
+@import './pages/login.css';
+@import './reference-theme.css';

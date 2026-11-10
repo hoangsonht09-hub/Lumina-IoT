@@ -1,0 +1,26 @@
+# Frontend
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+
+# Backend
+target/
+build/
+.gradle/
+
+# Database
+*.mv.db
+*.trace.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Credentials
+*.pem
+*.key
