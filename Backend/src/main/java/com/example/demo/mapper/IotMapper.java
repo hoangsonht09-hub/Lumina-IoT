@@ -33,7 +33,7 @@ public class IotMapper {
     }
 
     public ActionDto toActionDto(ActionLog action) {
-        String actionLabel = action.getDeviceId().equals("LED_04")
+        String actionLabel = action.getCommandId().startsWith("AUTO-LED4-")
                 ? (action.isDeviceOn() ? "Bật tự động" : "Tắt tự động")
                 : action.getAction().label();
         return new ActionDto("ACT-%06d".formatted(action.getId()), action.getCommandId(), action.getDeviceId(),

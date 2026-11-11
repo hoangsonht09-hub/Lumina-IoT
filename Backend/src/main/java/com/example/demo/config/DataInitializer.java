@@ -44,8 +44,11 @@ public class DataInitializer implements ApplicationRunner {
                     new Device("LED_03", "LED xanh", "GREEN")
             ));
         }
-        deviceRepository.findByDeviceCode("LED_04")
-                .orElseGet(() -> deviceRepository.save(new Device("LED_04", "Đèn 4 (tự động)", "AUTO")));
+        Device fourthLed = deviceRepository.findByDeviceCode("LED_04")
+                .orElseGet(() -> new Device("LED_04", "Đèn 4", "LED4"));
+        fourthLed.setName("Đèn 4");
+        fourthLed.setColor("LED4");
+        deviceRepository.save(fourthLed);
 
         if (sensorRepository.count() == 0) {
             sensorRepository.saveAll(List.of(
@@ -64,11 +67,23 @@ public class DataInitializer implements ApplicationRunner {
             }
         });
 
-        UserProfile profile = profileRepository.findByUsername("B23DCCN833")
+        UserProfile profile = profileRepository.findByUsername("B23DCCN721")
+                // Reuse the existing database row so action history keeps its user reference.
+                .or(() -> profileRepository.findByUsername("B23DCCN833"))
+                .or(() -> profileRepository.findByEmailIgnoreCase(authProperties.email()))
                 .orElseGet(() -> new UserProfile(
-                        "B23DCCN833", "Nguyễn Hoàng Sơn", authProperties.email(), "PTIT",
+                        "B23DCCN721", "Nguyễn Hoàng Sơn", authProperties.email(), "PTIT",
                         "Phòng IoT 01", "student", 3, passwordEncoder.encode(authProperties.password())
                 ));
+
+        boolean renamed = !"B23DCCN721".equals(profile.getUsername());
+        profile.setUsername("B23DCCN721");
+        if (renamed) {
+            profile.setDisplayStudentId("B23DCCN721");
+            if ("b23dccn833@stu.ptit.edu.vn".equalsIgnoreCase(profile.getEmail())) {
+                profile.setEmail(authProperties.email());
+            }
+        }
 
         if (!passwordEncoder.matches(authProperties.password(), profile.getPasswordHash())) {
             profile.setPasswordHash(passwordEncoder.encode(authProperties.password()));

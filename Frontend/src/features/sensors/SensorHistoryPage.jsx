@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Droplets, Search, Sun, Thermometer } from 'lucide-react'
+import { Activity, Droplets, Search, Sun, Thermometer } from 'lucide-react'
 import PageIntro from '../../components/common/PageIntro'
 import {
   DataTableHead,
@@ -15,6 +15,7 @@ const SENSOR_ICONS = {
   temperature: Thermometer,
   humidity: Droplets,
   light: Sun,
+  motion: Activity,
 }
 
 function buildHistorySearchParams(appliedSearch) {
@@ -104,7 +105,7 @@ export default function SensorHistoryPage() {
       <PageIntro
         eyebrow="Dữ liệu cảm biến"
         title="Lịch sử cảm biến"
-        description="Theo dõi dữ liệu nhiệt độ, độ ẩm và ánh sáng trong Phòng IoT 01."
+        description="Theo dõi nhiệt độ, độ ẩm, ánh sáng và chuyển động giả lập (0: không, 1: có)."
       />
 
       <section className="card table-card">
@@ -119,6 +120,7 @@ export default function SensorHistoryPage() {
               <option value='temperature'>Nhiệt độ</option>
               <option value='light'>Ánh sáng</option>
               <option value='humidity'>Độ ẩm</option>
+              <option value='motion'>Chuyển động (giả lập)</option>
               <option value='time'>Thời gian</option>
             </select>
           </label>

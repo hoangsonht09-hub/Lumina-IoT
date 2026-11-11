@@ -32,7 +32,7 @@ public class DashboardService {
 
     @Transactional(readOnly = true)
     public DashboardSummary summary() {
-        List<Device> devices = deviceRepository.findAllByDeviceCodeNotOrderByDeviceCode("LED_04");
+        List<Device> devices = deviceRepository.findAllByOrderByDeviceCode();
         Map<String, Metric> sensors = new LinkedHashMap<>();
         OffsetDateTime updatedAt = null;
         for (SensorType type : SensorType.values()) {

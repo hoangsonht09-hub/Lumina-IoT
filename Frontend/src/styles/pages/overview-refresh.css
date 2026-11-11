@@ -1,0 +1,31 @@
+.overview-page.overview-refresh { height: auto; min-height: calc(100vh - 76px); overflow: visible; padding-top: 20px; padding-bottom: 24px; color: #082b79; }
+.overview-refresh .sensor-panels, .overview-refresh .overview-bottom { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.overview-refresh .overview-bottom { margin-top: 16px; }
+.overview-refresh .sensor-panel, .overview-refresh .readings-panel, .overview-refresh .controls-panel { min-width: 0; border: 1px solid #eaf0ff; border-radius: 23px; background: #fff; box-shadow: 0 5px 16px #2260b508; }
+.overview-refresh .sensor-panel { padding: 18px 24px 14px; }
+.overview-refresh .sensor-panel header, .overview-refresh .controls-panel header { display: flex; align-items: center; gap: 18px; }
+.overview-refresh h2 { margin: 0; color: #05266e; font-size: 19px; font-weight: 800; letter-spacing: -.5px; }
+.overview-refresh .sensor-symbol { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; display: inline-grid; place-items: center; color: var(--sensor-color, #1599ff); background: color-mix(in srgb, var(--sensor-color, #1599ff) 12%, white); }
+.overview-refresh .simulation-label { margin-left: auto; padding: 4px 8px; border-radius: 10px; color: #7e3fe0; background: #f3eaff; font-size: 10px; white-space: nowrap; }
+.overview-refresh .sensor-plot { display: flex; gap: 10px; height: 145px; margin-top: 7px; }
+.overview-refresh .sensor-axis { width: 61px; flex-shrink: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 17px 0 24px; color: #0c3594; font-size: 11px; font-weight: 700; }
+.overview-refresh .sensor-axis small { display: block; }
+.overview-refresh .sensor-drawing { flex: 1; min-width: 0; }
+.overview-refresh .sensor-drawing svg { width: 100%; height: 124px; overflow: visible; }
+.overview-refresh .sensor-times { display: flex; justify-content: space-between; color: #517bc5; font-size: 10px; gap: 4px; }
+.overview-refresh .sensor-wait { height: 145px; display: grid; place-items: center; color: #8a9cbb; font-size: 13px; }
+.overview-refresh .readings-panel { display: grid; grid-template-columns: 1fr 1fr; padding: 14px; gap: 12px; }
+.overview-refresh .reading-tile { display: flex; align-items: center; gap: 18px; min-width: 0; border: 1px solid #edf3ff; border-radius: 18px; padding: 19px; box-shadow: 0 3px 9px #2260b509; }
+.overview-refresh .reading-humidity { --sensor-color: #03b53c; }.overview-refresh .reading-light { --sensor-color: #ffb000; }.overview-refresh .reading-motion { --sensor-color: #803cff; }
+.overview-refresh .reading-tile p { margin: 0 0 4px; font-size: 15px; }.overview-refresh .reading-tile p small { font-size: 10px; color: #8058bc; }
+.overview-refresh .reading-tile strong { font-size: 32px; letter-spacing: -.8px; }.overview-refresh .reading-tile strong small { font-size: 14px; font-weight: 600; }
+.overview-refresh .motion-state { display: inline-block; font-size: 10px; border-radius: 20px; background: #eef1f7; padding: 4px 7px; margin-left: 6px; color: #68768e; vertical-align: middle; }.overview-refresh .motion-state.detected { color: #069632; background: #d9f9e1; }
+.overview-refresh .controls-panel { padding: 20px; }.overview-refresh .controls-panel header { justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.overview-refresh .quick-device-action { border-radius: 30px; font-size: 11px; padding: 7px 10px; white-space: nowrap; }.overview-refresh .quick-device-action.on { background: #dfecff; color: #0652ed; }.overview-refresh .quick-device-action.off { background: #ffe4e5; color: #ed242b; }
+.overview-refresh .four-device-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.overview-refresh .control-tile { display: flex; align-items: center; gap: 12px; border: 1px solid #eaf1ff; border-radius: 17px; padding: 20px 16px; min-height: 85px; box-shadow: 0 3px 7px #2260b509; }.overview-refresh .control-tile > svg { flex-shrink: 0; color: #ff3038; }.overview-refresh .control-LED_02 > svg { color: #ffb000; }.overview-refresh .control-LED_03 > svg { color: #00be3b; }.overview-refresh .control-LED_04 > svg { color: #087cff; }
+.overview-refresh .control-tile > div { flex: 1; }.overview-refresh .control-tile strong { font-size: 14px; }.overview-refresh .control-tile small { display: block; font-size: 10px; color: #8b9bb4; }.overview-refresh .toggle { flex-shrink: 0; }
+.overview-refresh .device-setup-note { font-size: 12px; color: #8d6b31; margin-top: 12px; }
+@media (min-width: 1600px) { .overview-refresh .sensor-plot { height: 160px; }.overview-refresh .sensor-drawing svg { height: 139px; }.overview-refresh .sensor-wait { height: 160px; } }
+@media (max-width: 1150px) { .overview-refresh .overview-bottom { grid-template-columns: 1fr; }.overview-refresh .reading-tile { padding: 15px; }.overview-refresh .sensor-panel { padding: 16px; }.overview-refresh h2 { font-size: 16px; } }
+@media (max-width: 650px) { .overview-refresh .sensor-panels { grid-template-columns: 1fr; }.overview-refresh .controls-panel header { flex-wrap: wrap; }.overview-refresh .readings-panel { gap: 8px; padding: 8px; }.overview-refresh .reading-tile { gap: 8px; padding: 12px 8px; }.overview-refresh .reading-tile strong { font-size: 26px; }.overview-refresh .reading-tile p { font-size: 12px; }.overview-refresh .sensor-symbol { width: 36px; height: 36px; }.overview-refresh .control-tile { padding: 14px 9px; gap: 7px; }.overview-refresh .control-tile > svg { width: 25px; }.overview-refresh .control-tile strong { font-size: 12px; }.overview-refresh .motion-state { margin: 0; } }

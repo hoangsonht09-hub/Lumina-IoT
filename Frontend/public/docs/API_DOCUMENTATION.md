@@ -90,7 +90,7 @@ Request body:
 
 ```json
 {
-  "email": "b23dccn833@stu.ptit.edu.vn",
+  "email": "b23dccn721@stu.ptit.edu.vn",
   "password": "12345678"
 }
 ```
@@ -105,9 +105,9 @@ Response `200 OK`:
     "accessToken": "eyJhbGciOiJIUzI1NiJ9...",
     "expiresIn": 3600,
     "user": {
-      "id": "B23DCCN833",
+      "id": "B23DCCN721",
       "fullName": "Nguyễn Trọng Toàn",
-      "email": "b23dccn833@stu.ptit.edu.vn",
+      "email": "b23dccn721@stu.ptit.edu.vn",
       "role": "student"
     }
   }
@@ -528,7 +528,7 @@ Response `200 OK`:
           "brightness": 80
         },
         "performedBy": {
-          "id": "B23DCCN833",
+          "id": "B23DCCN721",
           "name": "Nguyễn Trọng Toàn"
         },
         "createdAt": "2026-08-18T10:45:00+07:00"
@@ -558,9 +558,9 @@ Response `200 OK`:
 {
   "success": true,
   "data": {
-    "studentId": "B23DCCN833",
+    "studentId": "B23DCCN721",
     "fullName": "Nguyễn Trọng Toàn",
-    "email": "b23dccn833@stu.ptit.edu.vn",
+    "email": "b23dccn721@stu.ptit.edu.vn",
     "organization": "PTIT",
     "practiceRoom": "Phòng IoT 01",
     "role": "student",
@@ -580,7 +580,7 @@ Request body:
 ```json
 {
   "fullName": "Nguyễn Trọng Toàn",
-  "email": "b23dccn833@stu.ptit.edu.vn"
+  "email": "b23dccn721@stu.ptit.edu.vn"
 }
 ```
 

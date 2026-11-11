@@ -20,6 +20,6 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     Optional<Device> findByDeviceCodeForUpdate(@Param("deviceCode") String deviceCode);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select device from Device device where device.deviceCode <> 'LED_04' order by device.deviceCode")
+    @Query("select device from Device device order by device.deviceCode")
     List<Device> findAllForUpdate();
 }

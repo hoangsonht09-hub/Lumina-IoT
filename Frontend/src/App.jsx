@@ -4,7 +4,7 @@ import Toast from './components/common/Toast'
 import DashboardLayout from './components/layout/DashboardLayout'
 import ActivityHistoryPage from './features/activity/ActivityHistoryPage'
 import LoginPage from './features/auth/LoginPage'
-import OverviewPage from './features/overview/OverviewPage'
+import OverviewPage from './features/overview/OverviewDashboard'
 import ProfilePage from './features/profile/ProfilePage'
 import SensorHistoryPage from './features/sensors/SensorHistoryPage'
 import { authSession } from './services/apiClient'
@@ -40,16 +40,19 @@ function AppRoutes({ onLogout }) {
 
   const refreshOverview = useCallback(async (showError = false) => {
     try {
-      const [nextSummary, nextDevices] = await Promise.all([
+      const [summaryResult, devicesResult] = await Promise.allSettled([
         iotApi.getDashboard(),
         iotApi.getDevices(),
       ])
-      setSummary(nextSummary)
-      setDevices(nextDevices.map((device) => ({
+      const nextSummary = summaryResult.status === 'fulfilled' ? summaryResult.value : null
+      if (nextSummary) setSummary(nextSummary)
+      if (devicesResult.status === 'fulfilled') setDevices(devicesResult.value.map((device) => ({
         ...device,
         on: device.isOn,
-        room: nextSummary.room.name,
+        room: nextSummary?.room?.name ?? 'Phòng IoT 01',
       })))
+      const failure = [summaryResult, devicesResult].find(result => result.status === 'rejected')
+      if (failure && showError && failure.reason.status !== 401) setToast(failure.reason.message)
     } catch (error) {
       if (showError && error.status !== 401) setToast(error.message)
     }

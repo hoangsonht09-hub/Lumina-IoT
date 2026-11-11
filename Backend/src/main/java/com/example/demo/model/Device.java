@@ -80,6 +80,8 @@ public class Device {
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public List<ActionLog> getActions() { return actions; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public void setName(String name) { this.name = name; }
+    public void setColor(String color) { this.color = color; }
     public void setBrightness(int brightness) { this.brightness = brightness; }
     public void setConnectionStatus(DeviceConnectionStatus connectionStatus) { this.connectionStatus = connectionStatus; }
     public void setUpdatedAt(OffsetDateTime updatedAt) { this.updatedAt = updatedAt; }

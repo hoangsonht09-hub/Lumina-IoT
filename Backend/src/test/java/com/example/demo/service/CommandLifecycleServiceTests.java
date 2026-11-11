@@ -31,7 +31,7 @@ class CommandLifecycleServiceTests {
     void pendingCommandCompletesOnlyAfterMatchingHardwareStatus() {
         String commandId = "CMD-ACK-TEST-1";
         var pending = commandLifecycleService.createPending(
-                commandId, "LED_01", "B23DCCN833",
+                commandId, "LED_01", "B23DCCN721",
                 DeviceAction.TURN_ON, true, 100
         );
 
@@ -52,7 +52,7 @@ class CommandLifecycleServiceTests {
     @Transactional
     void mqttDisabledModeCompletesCommandImmediately() {
         var response = deviceService.control(
-                "LED_02", new DeviceControlRequest(true, 100), "B23DCCN833"
+                "LED_02", new DeviceControlRequest(true, 100), "B23DCCN721"
         );
 
         assertThat(response.status()).isEqualTo("success");
@@ -61,14 +61,16 @@ class CommandLifecycleServiceTests {
 
     @Test
     @Transactional
-    void automaticLedIsExcludedFromManualCommands() {
-        assertThatThrownBy(() -> deviceService.control(
-                "LED_04", new DeviceControlRequest(true, 100), "B23DCCN833"))
-                .hasMessageContaining("Đèn 4 được điều khiển tự động");
-
-        var response = deviceService.controlAll(true, "B23DCCN833");
-        assertThat(response.updatedDevices()).isEqualTo(3);
+    void fourthLedSupportsManualAndGroupCommands() {
+        var fourth = deviceService.control(
+                "LED_04", new DeviceControlRequest(true, 100), "B23DCCN721");
+        assertThat(fourth.status()).isEqualTo("success");
+        assertThat(deviceRepository.findByDeviceCode("LED_04").orElseThrow().isEnabled()).isTrue();
+        var response = deviceService.controlAll(true, "B23DCCN721");
+        assertThat(response.updatedDevices()).isEqualTo(4);
         assertThat(response.commands()).extracting(command -> command.deviceId())
-                .containsExactly("LED_01", "LED_02", "LED_03");
+                .containsExactly("LED_01", "LED_02", "LED_03", "LED_04");
+        deviceService.controlAll(false, "B23DCCN721");
+        assertThat(deviceService.getDevices()).allMatch(device -> !device.isOn());
     }
 }

@@ -30,7 +30,7 @@ class CommandLifecycleServiceTests {
     void pendingCommandCompletesOnlyAfterMatchingHardwareStatus() {
         String commandId = "CMD-ACK-TEST-1";
         var pending = commandLifecycleService.createPending(
-                commandId, "LED_01", "B23DCCN833",
+                commandId, "LED_01", "B23DCCN721",
                 DeviceAction.TURN_ON, true, 100
         );
 
@@ -51,7 +51,7 @@ class CommandLifecycleServiceTests {
     @Transactional
     void mqttDisabledModeCompletesCommandImmediately() {
         var response = deviceService.control(
-                "LED_02", new DeviceControlRequest(true, 100), "B23DCCN833"
+                "LED_02", new DeviceControlRequest(true, 100), "B23DCCN721"
         );
 
         assertThat(response.status()).isEqualTo("success");

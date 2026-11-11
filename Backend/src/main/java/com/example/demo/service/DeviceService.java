@@ -50,7 +50,7 @@ public class DeviceService {
 
     @Transactional(readOnly = true)
     public List<DeviceDto> getDevices() {
-        return deviceRepository.findAllByDeviceCodeNotOrderByDeviceCode(AUTO_DEVICE_CODE)
+        return deviceRepository.findAllByOrderByDeviceCode()
                 .stream().map(mapper::toDeviceDto).toList();
     }
 
@@ -58,10 +58,6 @@ public class DeviceService {
         Device device = deviceRepository.findByDeviceCode(id)
                 .orElseThrow(() -> new BusinessException(HttpStatus.NOT_FOUND,
                         "DEVICE_NOT_FOUND", "Không tìm thấy thiết bị"));
-        if (AUTO_DEVICE_CODE.equals(device.getDeviceCode())) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, "AUTO_DEVICE",
-                    "Đèn 4 được điều khiển tự động theo ánh sáng");
-        }
         int brightness = request.brightness() == null ? device.getBrightness() : request.brightness();
         String commandId = nextCommandId();
         DeviceAction action = device.isEnabled() == request.isOn() && request.brightness() != null
@@ -88,7 +84,7 @@ public class DeviceService {
     }
 
     public ControlAllResponse controlAll(boolean isOn, String userId) {
-        List<Device> devices = deviceRepository.findAllByDeviceCodeNotOrderByDeviceCode(AUTO_DEVICE_CODE);
+        List<Device> devices = deviceRepository.findAllByOrderByDeviceCode();
         if (devices.isEmpty()) {
             throw new BusinessException(HttpStatus.NOT_FOUND, "DEVICE_NOT_FOUND", "Không có thiết bị");
         }

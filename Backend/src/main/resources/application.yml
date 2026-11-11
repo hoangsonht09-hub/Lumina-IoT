@@ -35,7 +35,7 @@ app:
   auth:
     jwt-secret: ${JWT_SECRET}
     token-ttl-seconds: ${JWT_TTL_SECONDS:3600}
-    email: ${APP_EMAIL:b23dccn833@stu.ptit.edu.vn}
+    email: ${APP_EMAIL:b23dccn721@stu.ptit.edu.vn}
     password: ${APP_PASSWORD}
   mqtt:
     enabled: ${MQTT_ENABLED:true}

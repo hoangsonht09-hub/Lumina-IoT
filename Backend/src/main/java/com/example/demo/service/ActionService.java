@@ -85,8 +85,8 @@ public class ActionService {
                 ));
             }
             if (selectedAction != null) predicates.add(cb.equal(root.get("action"), selectedAction));
-            if (automaticAction) predicates.add(cb.equal(root.get("device").get("deviceCode"), "LED_04"));
-            if (manualAction) predicates.add(cb.notEqual(root.get("device").get("deviceCode"), "LED_04"));
+            if (automaticAction) predicates.add(cb.like(root.get("commandId"), "AUTO-LED4-%"));
+            if (manualAction) predicates.add(cb.notLike(root.get("commandId"), "AUTO-LED4-%"));
             if (disconnectedAction) predicates.add(cb.equal(root.get("status"), CommandStatus.FAILED));
             if (selectedStatus != null) predicates.add(cb.equal(root.get("status"), selectedStatus));
             if (selectedTime != null) predicates.add(selectedTime.toPredicate(cb, root.get("createdAt")));

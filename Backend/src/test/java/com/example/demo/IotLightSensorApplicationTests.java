@@ -40,6 +40,30 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @ActiveProfiles("test")
 @SpringBootTest
 class IotLightSensorApplicationTests {
+    @Test
+    @Transactional
+    void simulatedMotionIsPersistedAndAvailableInHistory() {
+        var simulator = new com.example.demo.service.MotionSimulationService(sensorRepository, sensorReadingRepository);
+        simulator.generate();
+        var history = sensorService.history(null, "motion", null, null, null, null, null, 1, 10, "desc");
+        assertThat(history.items()).isNotEmpty();
+        assertThat(history.items().get(0).type()).isEqualTo("motion");
+        assertThat(history.items().get(0).sensorName()).contains("giả lập");
+        assertThat(history.items().get(0).value()).isIn(0.0, 1.0);
+    }
+
+    @Test
+    @Transactional
+    void manualFourthLedIsRecordedWithManualLabelAndFilter() {
+        var command = deviceService.control("LED_04", new com.example.demo.dto.DeviceDtos.DeviceControlRequest(true, 100), "B23DCCN721");
+        var history = actionService.history(null, "LED_04", "manual_turn_on", "success", null, null, null, 1, 10, "desc");
+        assertThat(history.items()).anySatisfy(item -> {
+            assertThat(item.commandId()).isEqualTo(command.commandId());
+            assertThat(item.deviceName()).isEqualTo("Đèn 4");
+            assertThat(item.actionLabel()).doesNotContain("tự động");
+            assertThat(item.performedBy().name()).isNotEqualTo("Hệ thống tự động");
+        });
+    }
     @Autowired
     private SensorReadingRepository sensorReadingRepository;
     @Autowired
@@ -63,6 +87,30 @@ class IotLightSensorApplicationTests {
     @Autowired
     private DeviceService deviceService;
 
+    @Autowired
+    private com.example.demo.config.DataInitializer dataInitializer;
+
+    @Test
+    @Transactional
+    void migratesLegacyUserWithoutCreatingAnotherDatabaseRow() {
+        UserProfile user = userProfileRepository.findByUsername("B23DCCN721").orElseThrow();
+        Long originalId = user.getDatabaseId();
+        long originalCount = userProfileRepository.count();
+        user.setUsername("B23DCCN833");
+        user.setDisplayStudentId("B23DCCN833");
+        user.setEmail("b23dccn833@stu.ptit.edu.vn");
+        userProfileRepository.saveAndFlush(user);
+
+        dataInitializer.run(new org.springframework.boot.DefaultApplicationArguments(new String[0]));
+        userProfileRepository.flush();
+
+        UserProfile migrated = userProfileRepository.findByUsername("B23DCCN721").orElseThrow();
+        assertThat(migrated.getDatabaseId()).isEqualTo(originalId);
+        assertThat(migrated.getDisplayStudentId()).isEqualTo("B23DCCN721");
+        assertThat(migrated.getEmail()).isEqualTo("test@example.com");
+        assertThat(userProfileRepository.count()).isEqualTo(originalCount);
+    }
+
     @Test
     void contextLoadsAndPersistsSensorReading() {
         Sensor sensor = sensorRepository.findBySensorCode("TEMP_01").orElseThrow();
@@ -83,7 +131,7 @@ class IotLightSensorApplicationTests {
                 "/docs/project.md",
                 "/docs/api.md"
         );
-        var updated = profileService.update("B23DCCN833", new ProfileUpdateRequest(
+        var updated = profileService.update("B23DCCN721", new ProfileUpdateRequest(
                 "B23-IOT-001", "Nguyen Van A", "updated@example.com", "PTIT Ha Noi", links
         ));
 
@@ -198,7 +246,7 @@ class IotLightSensorApplicationTests {
         Device device = deviceRepository.save(new Device(
                 "FILTER_LED", "Test LED", "RED"
         ));
-        UserProfile user = userProfileRepository.findByUsername("B23DCCN833").orElseThrow();
+        UserProfile user = userProfileRepository.findByUsername("B23DCCN721").orElseThrow();
         UserProfile otherUser = userProfileRepository.save(new UserProfile(
                 "OTHER_USER", "Other User", "other-user@example.com", "PTIT",
                 "IoT room", "student", 0, "test-password-hash"
@@ -218,7 +266,7 @@ class IotLightSensorApplicationTests {
         ));
 
         var result = actionService.history(
-                "B23DCCN833", "FILTER_LED", "turn_on", "success", null,
+                "B23DCCN721", "FILTER_LED", "turn_on", "success", null,
                 baseTime.minusMinutes(1), baseTime.plusMinutes(5), 1, 1, "desc"
         );
 
@@ -258,6 +306,8 @@ class IotLightSensorApplicationTests {
     @Test
     @Transactional
     void recordsAutomaticLedFourTransitionsInActionHistory() {
+        // Legacy AUTO records remain supported, but the default fourth LED is manual.
+        deviceRepository.findByDeviceCode("LED_04").orElseThrow().setColor("AUTO");
         OffsetDateTime first = OffsetDateTime.parse("2043-05-06T09:00:00+07:00");
         autoLightStatsService.ingest(new DeviceSnapshot(Map.of("LED_04", false), "AUTO", first));
         autoLightStatsService.ingest(new DeviceSnapshot(Map.of("LED_04", true), "AUTO", first.plusSeconds(2)));
@@ -282,6 +332,6 @@ class IotLightSensorApplicationTests {
         var manualOn = actionService.history(null, "LED_04", "manual_turn_on", null, null,
                 null, null, 1, 10, "desc");
         assertThat(manualOn.items()).isEmpty();
-        assertThat(deviceService.getDevices()).noneMatch(device -> device.id().equals("LED_04"));
+        assertThat(deviceService.getDevices()).anyMatch(device -> device.id().equals("LED_04"));
     }
 }

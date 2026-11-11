@@ -109,6 +109,7 @@ public class UserProfile {
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public List<ActionLog> getActions() { return actions; }
     public void setDisplayStudentId(String studentCode) { this.studentCode = studentCode; }
+    public void setUsername(String username) { this.username = username; }
     public void setFullName(String fullName) { this.fullName = fullName; }
     public void setEmail(String email) { this.email = email; }
     public void setOrganization(String organization) { this.organization = organization; }

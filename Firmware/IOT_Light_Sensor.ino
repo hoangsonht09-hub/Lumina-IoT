@@ -3,12 +3,13 @@
 #include <DHT.h>
 #include <Wire.h>
 #include <BH1750.h>
+#include <math.h>
 
 // ========== WIFI & MQTT ==========
-const char* ssid = "Nha 24- p301";
-const char* password = "88888888";
+const char* ssid = "Em iu";
+const char* password = "thangbomi";
 
-const char* mqtt_server = "192.168.2.9";
+const char* mqtt_server = "172.20.10.4";
 const int mqtt_port = 1884;
 const char* mqtt_user = "nguyenhoangson";
 const char* mqtt_pass = "b23dccn721";
@@ -26,6 +27,8 @@ PubSubClient client(espClient);
 #define LED_RED 2
 #define LED_YELLOW 4
 #define LED_GREEN 5
+// GPIO18 -> dien tro 330 ohm -> chan dai LED; chan ngan -> GND.
+#define LED_4 18
 
 // ========== SENSOR ==========
 DHT dht(DHT_PIN, DHT_TYPE);
@@ -41,6 +44,7 @@ uint8_t lightSensorAddress = 0;
 bool redState = false;
 bool yellowState = false;
 bool greenState = false;
+bool led4State = false;
 
 // ========== TIMER ==========
 const unsigned long SENSOR_INTERVAL = 2000;
@@ -69,10 +73,18 @@ void setGreen(bool state) {
   digitalWrite(LED_GREEN, state ? HIGH : LOW);
 }
 
+// Dieu khien LED 4
+void setLed4(bool state) {
+  led4State = state;
+  digitalWrite(LED_4, state ? HIGH : LOW);
+}
+
+// Bat/tat tat ca 4 LED
 void setAllLed(bool state) {
   setRed(state);
   setYellow(state);
   setGreen(state);
+  setLed4(state);
 }
 
 // ========== LIGHT SENSOR ==========
@@ -107,7 +119,10 @@ bool beginLightSensor() {
 void updateLightSensor() {
   unsigned long now = millis();
 
-  if (now - lastLightRead < LIGHT_INTERVAL) return;
+  if (now - lastLightRead < LIGHT_INTERVAL) {
+    return;
+  }
+
   lastLightRead = now;
 
   if (!lightSensorReady) {
@@ -139,11 +154,17 @@ void updateLightSensor() {
   currentLux = lux;
 }
 
+// Dung chung payload cho phan hoi lenh va cap nhat dinh ky.
+String ledStatusPayload() {
+  return "Red:" + String(redState ? "ON" : "OFF") +
+      " | Yel:" + String(yellowState ? "ON" : "OFF") +
+      " | Gre:" + String(greenState ? "ON" : "OFF") +
+      " | LED4:" + String(led4State ? "ON" : "OFF");
+}
+
 bool publishLedStatus() {
   if (!client.connected()) return false;
-  String status = "Red:" + String(redState ? "ON" : "OFF") +
-      " | Yel:" + String(yellowState ? "ON" : "OFF") +
-      " | Gre:" + String(greenState ? "ON" : "OFF");
+  String status = ledStatusPayload();
   return client.publish("home/esp32/status", status.c_str());
 }
 
@@ -170,6 +191,12 @@ void handleCommand(String cmd) {
   else if (cmd == "GREEN OFF") {
     setGreen(false);
   }
+  else if (cmd == "LED4 ON" || cmd == "LED 4 ON") {
+    setLed4(true);
+  }
+  else if (cmd == "LED4 OFF" || cmd == "LED 4 OFF") {
+    setLed4(false);
+  }
   else if (cmd == "ALL ON") {
     setAllLed(true);
   }
@@ -183,7 +210,7 @@ void handleCommand(String cmd) {
 
   Serial.print("OK: ");
   Serial.println(cmd);
-  // Confirm the actual outputs immediately instead of waiting for sensor reads.
+  // Gui ngay trang thai thuc te de backend xac nhan lenh, khong cho doc cam bien.
   bool confirmed = publishLedStatus();
   Serial.println(confirmed ? "MQTT command status=OK" : "MQTT command status=FAIL");
 }
@@ -206,7 +233,7 @@ void callback(
     message.c_str()
   );
 
-  // Cap nhat nguong anh sang (chi de phan loai)
+  // Cap nhat nguong anh sang
   if (String(topic) ==
       "home/esp32/config/light-threshold") {
 
@@ -241,6 +268,7 @@ void callback(
     return;
   }
 
+  // Nhan lenh dieu khien LED
   if (String(topic) == "home/esp32/command") {
     handleCommand(message);
   }
@@ -253,9 +281,11 @@ void maintainConnection() {
   if (WiFi.status() != WL_CONNECTED) {
     if (now - lastWifiAttempt >= RETRY_INTERVAL) {
       lastWifiAttempt = now;
+
       Serial.println("Dang ket noi WiFi...");
       WiFi.reconnect();
     }
+
     return;
   }
 
@@ -282,9 +312,11 @@ void maintainConnection() {
     Serial.println("MQTT da ket noi");
 
     client.subscribe("home/esp32/command");
+
     client.subscribe(
       "home/esp32/config/light-threshold"
     );
+    publishLedStatus();
 
   } else {
     Serial.printf(
@@ -313,18 +345,21 @@ String sensorField(
 // ========== SETUP ==========
 void setup() {
   Serial.begin(115200);
-Serial.setTimeout(100);
+  Serial.setTimeout(100);
 
-  // Khoi tao 3 LED
+  // Khoi tao 4 LED
   pinMode(LED_RED, OUTPUT);
   pinMode(LED_YELLOW, OUTPUT);
   pinMode(LED_GREEN, OUTPUT);
+  pinMode(LED_4, OUTPUT);
 
+  // Tat tat ca LED khi khoi dong
   setAllLed(false);
 
-  // Khoi tao cam bien
+  // Khoi tao DHT22
   dht.begin();
 
+  // Khoi tao BH1750
   Wire.begin(LIGHT_SDA, LIGHT_SCL);
 
   lightSensorReady = beginLightSensor();
@@ -351,6 +386,9 @@ Serial.setTimeout(100);
   lastLightRead = millis() - LIGHT_INTERVAL;
 
   Serial.println("ESP32 bat dau...");
+  Serial.println("4 LED: RED=2, YELLOW=4, GREEN=5, LED4=18");
+  Serial.println("Lenh: LED4 ON, LED4 OFF, ALL ON, ALL OFF");
+  Serial.printf("MQTT broker: %s:%d\n", mqtt_server, mqtt_port);
 }
 
 // ========== LOOP ==========
@@ -358,7 +396,7 @@ void loop() {
   // Doc cam bien anh sang
   updateLightSensor();
 
-  // Dieu khien LED qua Serial
+  // Dieu khien LED qua Serial Monitor
   if (Serial.available()) {
     handleCommand(
       Serial.readStringUntil('\n')
@@ -399,11 +437,8 @@ void loop() {
     " | Lux:" + luxText +
     " | Light:" + lightStatus;
 
-  // Trang thai CHI 3 LED
-  String ledStatus =
-    "Red:" + String(redState ? "ON" : "OFF") +
-    " | Yel:" + String(yellowState ? "ON" : "OFF") +
-    " | Gre:" + String(greenState ? "ON" : "OFF");
+  // Trang thai 4 LED
+  String ledStatus = ledStatusPayload();
 
   // Gui MQTT
   if (client.connected()) {
@@ -412,10 +447,7 @@ void loop() {
       payload.c_str()
     );
 
-    bool statusSent = client.publish(
-      "home/esp32/status",
-      ledStatus.c_str()
-    );
+    bool statusSent = publishLedStatus();
 
     Serial.printf(
       "MQTT publish: sensors=%s status=%s\n",

@@ -20,10 +20,10 @@ const AVATAR_STORAGE_KEY = 'lumina_profile_avatar'
 const PROFILE_UPDATED_EVENT = 'lumina:profile-updated'
 
 const DEFAULT_PROFILE_LINKS = {
-  github: 'https://github.com/Toanproptit/IOT_Light_Sensor.git',
-  figma: 'https://www.figma.com/design/FAFolqqY1l4d1ouGOGe4EN/Untitled?node-id=0-1&p=f&t=hX9CBeMNZOFfyx5F-0',
+  github: 'https://github.com/hoangsonht09-hub/Lumina-IoT',
+  figma: 'https://www.figma.com/design/73rYadn4cYZkOYG78fxlcz/IoT?node-id=0-1&t=7eFRZ8KWgItWLotN-1',
   projectDocs: 'https://docs.google.com/document/d/1Nup2By1D3d8yEg-9v_vy686105hoH92S/edit?usp=sharing&ouid=113704325966074309678&rtpof=true&sd=true',
-  apiDocs: 'http://localhost:8080/swagger-ui/index.html',
+  apiDocs: 'http://localhost:8081/swagger-ui/index.html',
 }
 
 const PROFILE_LINK_DEFINITIONS = [

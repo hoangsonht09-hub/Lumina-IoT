@@ -3,7 +3,8 @@ package com.example.demo.enums;
 public enum SensorType {
     TEMPERATURE("temperature", "TEMP_01", "Cảm biến nhiệt độ", "°C"),
     HUMIDITY("humidity", "HUM_01", "Cảm biến độ ẩm", "%"),
-    LIGHT("light", "LIGHT_01", "Cảm biến ánh sáng", "lux");
+    LIGHT("light", "LIGHT_01", "Cảm biến ánh sáng", "lux"),
+    MOTION("motion", "MOTION_01", "Chuyển động (giả lập)", "0/1");
 
     private final String value;
     private final String sensorId;

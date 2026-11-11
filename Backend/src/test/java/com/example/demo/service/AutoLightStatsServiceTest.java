@@ -35,6 +35,15 @@ class AutoLightStatsServiceTest {
     private UserProfileRepository profileRepository;
 
     @Test
+    void manualFourthLedDoesNotCreateAutomaticHistory() {
+        var service = new AutoLightStatsService(eventRepository, actionRepository, deviceRepository, profileRepository);
+        when(deviceRepository.findByDeviceCode("LED_04"))
+                .thenReturn(Optional.of(new Device("LED_04", "Đèn 4", "LED4")));
+        service.ingest(snapshot(true, OffsetDateTime.now()));
+        org.mockito.Mockito.verifyNoInteractions(eventRepository, actionRepository, profileRepository);
+    }
+
+    @Test
     void storesOnlyLedFourStateTransitions() {
         AutoLightStatsService service = new AutoLightStatsService(
                 eventRepository, actionRepository, deviceRepository, profileRepository);

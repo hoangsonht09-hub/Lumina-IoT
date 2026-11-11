@@ -73,7 +73,7 @@ class IotLightSensorApplicationTests {
                 "/docs/project.md",
                 "/docs/api.md"
         );
-        var updated = profileService.update("B23DCCN833", new ProfileUpdateRequest(
+        var updated = profileService.update("B23DCCN721", new ProfileUpdateRequest(
                 "B23-IOT-001", "Nguyen Van A", "updated@example.com", "PTIT Ha Noi", links
         ));
 
@@ -147,7 +147,7 @@ class IotLightSensorApplicationTests {
         Device device = deviceRepository.save(new Device(
                 "FILTER_LED", "Test LED", "RED"
         ));
-        UserProfile user = userProfileRepository.findByUsername("B23DCCN833").orElseThrow();
+        UserProfile user = userProfileRepository.findByUsername("B23DCCN721").orElseThrow();
         UserProfile otherUser = userProfileRepository.save(new UserProfile(
                 "OTHER_USER", "Other User", "other-user@example.com", "PTIT",
                 "IoT room", "student", 0, "test-password-hash"
@@ -167,7 +167,7 @@ class IotLightSensorApplicationTests {
         ));
 
         var result = actionService.history(
-                "B23DCCN833", "FILTER_LED", "turn_on", "success", null,
+                "B23DCCN721", "FILTER_LED", "turn_on", "success", null,
                 baseTime.minusMinutes(1), baseTime.plusMinutes(5), 1, 1, "desc"
         );
 

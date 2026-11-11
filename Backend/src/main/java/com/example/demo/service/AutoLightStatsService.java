@@ -39,6 +39,9 @@ public class AutoLightStatsService {
     @EventListener
     @Transactional
     public void ingest(DeviceSnapshot snapshot) {
+        // LED_04 is now a manual output; do not attribute its changes to automation.
+        if (deviceRepository.findByDeviceCode("LED_04")
+                .map(device -> !"AUTO".equals(device.getColor())).orElse(true)) return;
         Boolean turnedOn = snapshot.states().get("LED_04");
         if (turnedOn == null) return;
 
